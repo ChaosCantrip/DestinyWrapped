@@ -31,7 +31,7 @@ def process_data(cloud_event: CloudEvent) -> None:
     collection_path = path_parts[separator_idx + 1]
     document_path = "/".join(path_parts[(separator_idx + 2) :])
 
-    affected_doc = client.collection(collection_path).document(document_path)
+    job_doc = client.collection(collection_path).document(document_path)
 
     bungie_id = firestore_payload.value.fields["bungie_id"].string_value
     status = firestore_payload.value.fields["status"].string_value
@@ -39,7 +39,7 @@ def process_data(cloud_event: CloudEvent) -> None:
     if status == "pending" or status == "completed":
         return
 
-    affected_doc.update({
+    job_doc.update({
         "status": "pending"
     })
 
@@ -92,7 +92,7 @@ def process_data(cloud_event: CloudEvent) -> None:
             "data": json.dumps(data)
         })
 
-        affected_doc.update({
+        job_doc.update({
             "status": "completed"
         })
 
