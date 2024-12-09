@@ -38,8 +38,7 @@ def process_data(cloud_event: CloudEvent) -> None:
     if status == "pending" or status == "completed":
         return
 
-    affected_doc.set({
-        "bungie_id": bungie_id,
+    affected_doc.update({
         "status": "pending"
     })
 
@@ -87,8 +86,7 @@ def process_data(cloud_event: CloudEvent) -> None:
             "data": json.dumps(raids)
         })
 
-        affected_doc.set({
-            "bungie_id": bungie_id,
+        affected_doc.update({
             "status": "completed"
         })
 
