@@ -81,11 +81,15 @@ def process_data(cloud_event: CloudEvent) -> None:
                         raids[activity_hash]["failedCompletions"] += 1
                     raids[activity_hash]["time"] += activity["values"]["activityDurationSeconds"]["basic"]["value"]
 
+            data = {
+                "raids": raids
+            }
+
         data_document = client.collection("processed_data").document(bungie_id)
         data_document.set({
             "bungie_id": bungie_id,
             "data_version": DATA_VERSION,
-            "data": json.dumps(raids)
+            "data": data
         })
 
         affected_doc.update({
