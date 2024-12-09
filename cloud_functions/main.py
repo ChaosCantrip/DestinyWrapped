@@ -96,23 +96,23 @@ def process_data(bungie_id: str) -> dict:
                     break
                 activities.append(activity)
 
-            raids = {}
-            dungeons = {}
-            for activity in activities:
-                if activity["activityDetails"]["mode"] == 4:
-                    activity_hash = activity["activityDetails"]["referenceId"]
-                    if activity_hash not in raids:
-                        raids[activity_hash] = {
-                            "successfulCompletions": 0,
-                            "failedCompletions": 0,
-                            "time": 0
-                        }
-                    if activity["values"]["completed"]["basic"]["value"] == 1.0:
-                        raids[activity_hash]["successfulCompletions"] += 1
-                    else:
-                        raids[activity_hash]["failedCompletions"] += 1
-                    raids[activity_hash]["time"] += activity["values"]["activityDurationSeconds"]["basic"]["value"]
+    raids = {}
+    dungeons = {}
+    for activity in activities:
+        if activity["activityDetails"]["mode"] == 4:
+            activity_hash = activity["activityDetails"]["referenceId"]
+            if activity_hash not in raids:
+                raids[activity_hash] = {
+                    "successfulCompletions": 0,
+                    "failedCompletions": 0,
+                    "time": 0
+                }
+            if activity["values"]["completed"]["basic"]["value"] == 1.0:
+                raids[activity_hash]["successfulCompletions"] += 1
+            else:
+                raids[activity_hash]["failedCompletions"] += 1
+            raids[activity_hash]["time"] += activity["values"]["activityDurationSeconds"]["basic"]["value"]
 
-            return {
-                "raids": raids
-            }
+    return {
+        "raids": raids
+    }
