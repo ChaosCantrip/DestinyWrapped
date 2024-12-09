@@ -6,6 +6,7 @@ import requests
 from datetime import datetime
 import json
 import os
+import logging
 
 DATA_VERSION = 1
 START_DATE = datetime.fromisoformat("2023-12-01T00:00:00Z")
@@ -30,23 +31,35 @@ def entry_point(cloud_event: CloudEvent) -> None:
 
     if status != "pending":
         return
+    
+    logging.info(f"Beginning processing for {bungie_id}")
 
     job_doc.update({
         "status": "processing"
     })
 
-    data = process_data(bungie_id)
+    try:
+        data = process_data(bungie_id)
 
-    data_document = client.collection("processed_data").document(bungie_id)
-    data_document.set({
-        "bungie_id": bungie_id,
-        "data_version": DATA_VERSION,
-        "data": json.dumps(data)
-    })
+        data_document = client.collection("processed_data").document(bungie_id)
+        data_document.set({
+            "bungie_id": bungie_id,
+            "data_version": DATA_VERSION,
+            "data": json.dumps(data)
+        })
 
-    job_doc.update({
-        "status": "completed"
-    })
+        job_doc.update({
+            "status": "completed"
+        })
+
+        logging.info(f"Finished processing for {bungie_id}")
+
+    except Exception as e:
+        job_doc.update({
+            "status": "failed"
+        })
+        logging.exception(f"Error during processing for {bungie_id}\n\n{e}", exc_info=True)
+        raise e
 
 
 def send_get_request(url):
