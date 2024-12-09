@@ -1,0 +1,9 @@
+requests==2.32.3
+functions-framework==3.3.0
+google-events==0.4.0
+google-api-core==2.23.0
+google-cloud-core==2.4.1
+google-cloud-firestore==2.19.0
+protobuf==5.29.1
+cloudevents==1.9.0
+grpcio==1.68.1
