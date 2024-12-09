@@ -8,6 +8,7 @@ import json
 import os
 
 client = firestore.Client()
+DATA_VERSION = 1
 
 
 start_date = datetime.fromisoformat("2024-01-01T00:00:00Z")
@@ -83,6 +84,7 @@ def process_data(cloud_event: CloudEvent) -> None:
         data_document = client.collection("processed_data").document(bungie_id)
         data_document.set({
             "bungie_id": bungie_id,
+            "data_version": DATA_VERSION,
             "data": json.dumps(raids)
         })
 
