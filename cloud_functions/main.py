@@ -8,7 +8,8 @@ import json
 import os
 
 DATA_VERSION = 1
-START_DATE = datetime.fromisoformat("2024-01-01T00:00:00Z")
+START_DATE = datetime.fromisoformat("2023-12-01T00:00:00Z")
+END_DATE = datetime.fromisoformat("2024-12-01T00:00:00Z")
 
 client = firestore.Client()
 
@@ -75,6 +76,8 @@ def process_data(bungie_id: str) -> dict:
 
             for activity in history_response_json["Response"]["activities"]:
                 date = datetime.fromisoformat(activity["period"])
+                if date > END_DATE:
+                    continue
                 if date < START_DATE:
                     start_date_reached = True
                     break
