@@ -7,11 +7,10 @@ from datetime import datetime
 import json
 import os
 
-client = firestore.Client()
 DATA_VERSION = 1
+START_DATE = datetime.fromisoformat("2024-01-01T00:00:00Z")
 
-
-start_date = datetime.fromisoformat("2024-01-01T00:00:00Z")
+client = firestore.Client()
 
 @functions_framework.cloud_event
 def entry_point(cloud_event: CloudEvent) -> None:
@@ -76,7 +75,7 @@ def process_data(bungie_id: str) -> dict:
 
             for activity in history_response_json["Response"]["activities"]:
                 date = datetime.fromisoformat(activity["period"])
-                if date < start_date:
+                if date < START_DATE:
                     start_date_reached = True
                     break
                 activities.append(activity)
