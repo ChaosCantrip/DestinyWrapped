@@ -22,7 +22,7 @@ def send_get_request(url):
     )
 
 @functions_framework.cloud_event
-def process_data(cloud_event: CloudEvent) -> None:
+def entry_point(cloud_event: CloudEvent) -> None:
     firestore_payload = firestoredata.DocumentEventData()
     firestore_payload._pb.ParseFromString(cloud_event.data)
 

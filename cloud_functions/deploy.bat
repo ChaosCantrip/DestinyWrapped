@@ -15,7 +15,7 @@ gcloud functions deploy %GOOGLE_CLOUD_FUNCTION% ^
 --region=%GOOGLE_CLOUD_REGION% ^
 --trigger-location=%GOOGLE_CLOUD_TRIGGER_LOCATION% ^
 --source=. ^
---entry-point=process_data ^
+--entry-point=entry_point ^
 --trigger-event-filters=type=google.cloud.firestore.document.v1.written ^
 --trigger-event-filters=database=%GOOGLE_CLOUD_DB% ^
 --trigger-event-filters-path-pattern=document=%GOOGLE_CLOUD_DOCUMENT% ^
