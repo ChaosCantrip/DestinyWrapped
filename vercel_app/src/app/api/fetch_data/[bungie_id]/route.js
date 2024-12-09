@@ -6,7 +6,17 @@ const DATA_VERSION = 1;
 export async function GET(request, { params }) {
     const {bungie_id} = await params;
 
-    // Add validation for Bungie ID
+    if (!bungie_id) {
+        return NextResponse.json({
+            status: "error",
+            message: "Missing bungie_id"
+        }, { status: 400 });
+    } else if (isNaN(bungie_id) || bungie_id.length !== 19) {
+        return NextResponse.json({
+            status: "error",
+            message: "Invalid bungie_id"
+        }, { status: 400 });
+    }
 
     const job_record = await fetch_document("job_queue", bungie_id);
 
