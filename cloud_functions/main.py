@@ -36,11 +36,11 @@ def process_data(cloud_event: CloudEvent) -> None:
     bungie_id = firestore_payload.value.fields["bungie_id"].string_value
     status = firestore_payload.value.fields["status"].string_value
 
-    if status == "pending" or status == "completed":
+    if status != "pending":
         return
 
     job_doc.update({
-        "status": "pending"
+        "status": "processing"
     })
 
     profile_response = send_get_request(f"Destiny2/3/Profile/{bungie_id}?components=200")
