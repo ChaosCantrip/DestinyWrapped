@@ -89,7 +89,7 @@ def process_data(cloud_event: CloudEvent) -> None:
         data_document.set({
             "bungie_id": bungie_id,
             "data_version": DATA_VERSION,
-            "data": data
+            "data": json.dumps(data)
         })
 
         affected_doc.update({
