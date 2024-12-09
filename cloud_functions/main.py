@@ -13,14 +13,6 @@ DATA_VERSION = 1
 
 start_date = datetime.fromisoformat("2024-01-01T00:00:00Z")
 
-def send_get_request(url):
-    return requests.get(
-        f"https://www.bungie.net/Platform/{url}",
-        headers={
-            "X-API-Key": os.environ["BUNGIE_API_KEY"]
-        }
-    )
-
 @functions_framework.cloud_event
 def entry_point(cloud_event: CloudEvent) -> None:
     firestore_payload = firestoredata.DocumentEventData()
@@ -42,6 +34,31 @@ def entry_point(cloud_event: CloudEvent) -> None:
     job_doc.update({
         "status": "processing"
     })
+
+    data = process_data(bungie_id)
+
+    data_document = client.collection("processed_data").document(bungie_id)
+    data_document.set({
+        "bungie_id": bungie_id,
+        "data_version": DATA_VERSION,
+        "data": json.dumps(data)
+    })
+
+    job_doc.update({
+        "status": "completed"
+    })
+
+
+def send_get_request(url):
+    return requests.get(
+        f"https://www.bungie.net/Platform/{url}",
+        headers={
+            "X-API-Key": os.environ["BUNGIE_API_KEY"]
+        }
+    )
+
+
+def process_data(bungie_id: str) -> dict:
 
     profile_response = send_get_request(f"Destiny2/3/Profile/{bungie_id}?components=200")
     profile_response_json = profile_response.json()
@@ -81,18 +98,6 @@ def entry_point(cloud_event: CloudEvent) -> None:
                         raids[activity_hash]["failedCompletions"] += 1
                     raids[activity_hash]["time"] += activity["values"]["activityDurationSeconds"]["basic"]["value"]
 
-            data = {
+            return {
                 "raids": raids
             }
-
-        data_document = client.collection("processed_data").document(bungie_id)
-        data_document.set({
-            "bungie_id": bungie_id,
-            "data_version": DATA_VERSION,
-            "data": json.dumps(data)
-        })
-
-        job_doc.update({
-            "status": "completed"
-        })
-
