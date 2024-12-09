@@ -14,3 +14,19 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
+
+export async function fetch_document(collection, document) {
+    const docRef = doc(db, collection, document);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        return docSnap.data();
+    } else {
+        return null;
+    }
+}
+
+export async function set_document(collection, document, data) {
+    const docRef = doc(db, collection, document);
+    await setDoc(docRef, data);
+}
