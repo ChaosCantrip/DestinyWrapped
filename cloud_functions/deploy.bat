@@ -17,6 +17,6 @@ gcloud functions deploy %GOOGLE_CLOUD_FUNCTION% ^
 --source=. ^
 --entry-point=process_data ^
 --trigger-event-filters=type=google.cloud.firestore.document.v1.written ^
---trigger-event-filters=database=%GOOGLE_CLOUD_PROJECT% ^
+--trigger-event-filters=database=%GOOGLE_CLOUD_DB% ^
 --trigger-event-filters-path-pattern=document=%GOOGLE_CLOUD_DOCUMENT% ^
 --set-env-vars GOOGLE_CLOUD_PROJECT=%GOOGLE_CLOUD_PROJECT%,BUNGIE_API_KEY=%BUNGIE_API_KEY%
