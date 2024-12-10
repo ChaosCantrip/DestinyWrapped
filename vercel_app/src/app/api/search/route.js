@@ -56,6 +56,7 @@ export async function POST(request) {
     }
 
     return NextResponse.json({
+        status: "success",
         results: results,
         has_more: response_json.Response.hasMore
     });
